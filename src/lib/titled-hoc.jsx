@@ -13,7 +13,7 @@ const TitledHOC = function (WrappedComponent) {
                 'handleUpdateProjectTitle'
             ]);
             this.state = {
-                projectTitle: null
+                projectTitle: ''
             };
         }
         handleUpdateProjectTitle (newTitle) {
@@ -22,7 +22,6 @@ const TitledHOC = function (WrappedComponent) {
         render () {
             return (
                 <WrappedComponent
-                    canEditTitle
                     projectTitle={this.state.projectTitle}
                     onUpdateProjectTitle={this.handleUpdateProjectTitle}
                     {...this.props}

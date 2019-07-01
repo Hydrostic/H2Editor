@@ -35,8 +35,11 @@ class Storage extends ScratchStorage {
     setProjectHost (projectHost) {
         this.projectHost = projectHost;
     }
+    setProjectUploadHost (projectUploadHost) {
+        this.projectUploadHost = projectUploadHost;
+    }
     getProjectGetConfig (projectAsset) {
-        return `${this.projectHost}/${projectAsset.assetId}`;
+        return `${this.projectHost}/${projectAsset.assetId}.json`;
     }
     getProjectCreateConfig () {
         return {

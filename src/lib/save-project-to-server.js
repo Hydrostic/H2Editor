@@ -34,12 +34,12 @@ export default function (projectId, vmState, params) {
     if (creatingProject) {
         Object.assign(opts, {
             method: 'post',
-            url: `${storage.projectHost}/${qs}`
+            url: `${storage.projectUploadHost}/${qs}`
         });
     } else {
         Object.assign(opts, {
             method: 'put',
-            url: `${storage.projectHost}/${projectId}${qs}`
+            url: `${storage.projectUploadHost}/${projectId}${qs}`
         });
     }
     return new Promise((resolve, reject) => {

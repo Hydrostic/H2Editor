@@ -52,6 +52,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
                 'leavePageConfirm',
                 'tryToAutoSave'
             ]);
+            storage.setProjectUploadHost(props.projectUploadHost);
         }
         componentWillMount () {
             if (typeof window === 'object') {
@@ -328,6 +329,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
                 onUpdateProjectData,
                 onUpdateProjectThumbnail,
                 reduxProjectId,
+                projectUploadHost,
                 reduxProjectTitle,
                 setAutoSaveTimeoutId: setAutoSaveTimeoutIdProp,
                 /* eslint-enable no-unused-vars */
@@ -380,6 +382,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
         onUpdateProjectThumbnail: PropTypes.func,
         onUpdatedProject: PropTypes.func,
         projectChanged: PropTypes.bool,
+        projectUploadHost: PropTypes.string,
         reduxProjectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         reduxProjectTitle: PropTypes.string,
         setAutoSaveTimeoutId: PropTypes.func.isRequired,
@@ -390,7 +393,8 @@ const ProjectSaverHOC = function (WrappedComponent) {
         onRemixing: () => {},
         onSetProjectThumbnailer: () => {},
         onSetProjectSaver: () => {},
-        onUpdateProjectData: saveProjectToServer
+        onUpdateProjectData: saveProjectToServer,
+        projectUploadHost: 'http://127.0.0.1:7001/v1/project/new/remix'
     };
     const mapStateToProps = (state, ownProps) => {
         const loadingState = state.scratchGui.projectState.loadingState;

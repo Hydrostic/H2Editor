@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {intlShape, injectIntl} from 'react-intl';
 import bindAll from 'lodash.bindall';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 import {setProjectUnchanged} from '../reducers/project-changed';
 import {
@@ -35,6 +36,11 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             bindAll(this, [
                 'fetchProject'
             ]);
+            this.state = {
+                projectTitle: '',
+                canRemix: false,
+                enableCommunity: false
+            };
             storage.setProjectHost(props.projectHost);
             storage.setAssetHost(props.assetHost);
             storage.setTranslatorFunction(props.intl.formatMessage);
@@ -68,6 +74,42 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             }
         }
         fetchProject (projectId, loadingState) {
+            if (projectId !== '' &&
+                projectId !== null &&
+                typeof projectId !== 'undefined' && projectId.toString() !== '0'){
+                return axios.get(`http://127.0.0.1:7001/v1/project/${parseInt(projectId, 10)}`)
+                    .then(response => {
+                        if (response.data.message === 'Project Not Exists'){
+                            throw new Error('Could not find project');
+                        } else if (response.data.message === 'Permission Denied'){
+                            throw new Error('Permission denied by project policy');
+                        } else {
+                            const projectStorageName = response.data.return_data.project_storage_name;
+                            storage
+                                .load(storage.AssetType.Project, projectStorageName, storage.DataFormat.JSON)
+                                .then(projectAsset => {
+                                    if (projectAsset) {
+                                        this.props.onFetchedProjectData(projectAsset.data, loadingState);
+                                        this.props.onUpdateProjectTitle(response.data.return_data.project_name);
+                                        // TODO: 结合用户来判断是否可以 remix，如果当前用户即为作品用户，则不可 remix，但未发布，则可 share
+                                        this.setState({canRemix: true, enableCommunity: true});
+                                    } else {
+                                        // Treat failure to load as an error
+                                        // Throw to be caught by catch later on
+                                        throw new Error('Could not find project');
+                                    }
+                                })
+                                .catch(err => {
+                                    this.props.onError(err);
+                                    log.error(err);
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        this.props.onError(err);
+                        log.error(err);
+                    });
+            }
             return storage
                 .load(storage.AssetType.Project, projectId, storage.DataFormat.JSON)
                 .then(projectAsset => {
@@ -83,6 +125,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                     this.props.onError(err);
                     log.error(err);
                 });
+                
         }
         render () {
             const {
@@ -105,6 +148,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             } = this.props;
             return (
                 <WrappedComponent
+                    canEditTitle
+                    canRemix={this.state.canRemix}
+                    enableCommunity={this.state.enableCommunity}
                     fetchingProject={isFetchingWithIdProp}
                     {...componentProps}
                 />
@@ -127,11 +173,13 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         projectHost: PropTypes.string,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         reduxProjectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        setProjectId: PropTypes.func
+        setProjectId: PropTypes.func,
+        // eslint-disable-next-line react/sort-prop-types
+        onUpdateProjectTitle: PropTypes.func
     };
     ProjectFetcherComponent.defaultProps = {
         assetHost: 'https://assets.scratch.mit.edu',
-        projectHost: 'https://projects.scratch.mit.edu'
+        projectHost: 'https://clipteam-project.oss-cn-shanghai.aliyuncs.com'
     };
 
     const mapStateToProps = state => ({
