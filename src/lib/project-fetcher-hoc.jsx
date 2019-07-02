@@ -35,6 +35,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             super(props);
             bindAll(this, [
                 'fetchProject'
+                // 'fetchUserInfo'
             ]);
             this.state = {
                 projectTitle: '',
@@ -64,6 +65,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 storage.setAssetHost(this.props.assetHost);
             }
             if (this.props.isFetchingWithId && !prevProps.isFetchingWithId) {
+                // this.fetchUserInfo();
                 this.fetchProject(this.props.reduxProjectId, this.props.loadingState);
             }
             if (this.props.isShowingProject && !prevProps.isShowingProject) {
@@ -77,14 +79,14 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             if (projectId !== '' &&
                 projectId !== null &&
                 typeof projectId !== 'undefined' && projectId.toString() !== '0'){
-                return axios.get(`http://127.0.0.1:7001/v1/project/${parseInt(projectId, 10)}`)
+                return axios.get(`http://127.0.0.1:7001/v1/project/read/${parseInt(projectId, 10)}`)
                     .then(response => {
                         if (response.data.message === 'Project Not Exists'){
                             throw new Error('Could not find project');
                         } else if (response.data.message === 'Permission Denied'){
                             throw new Error('Permission denied by project policy');
                         } else {
-                            const projectStorageName = response.data.return_data.project_storage_name;
+                            const projectStorageName = response.data.return_data.project_storage_name || response.data.return_data.record_storage_name;
                             storage
                                 .load(storage.AssetType.Project, projectStorageName, storage.DataFormat.JSON)
                                 .then(projectAsset => {
@@ -127,6 +129,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 });
                 
         }
+        // fetchUserInfo(){
+
+        // }
         render () {
             const {
                 /* eslint-disable no-unused-vars */

@@ -394,7 +394,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
         onSetProjectThumbnailer: () => {},
         onSetProjectSaver: () => {},
         onUpdateProjectData: saveProjectToServer,
-        projectUploadHost: 'http://127.0.0.1:7001/v1/project/new/remix'
+        projectUploadHost: 'http://127.0.0.1:7001/v1/project/new'
     };
     const mapStateToProps = (state, ownProps) => {
         const loadingState = state.scratchGui.projectState.loadingState;

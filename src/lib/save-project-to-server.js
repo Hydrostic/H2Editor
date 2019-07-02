@@ -20,8 +20,7 @@ export default function (projectId, vmState, params) {
         // If we set json:true then the body is double-stringified, so don't
         headers: {
             'Content-Type': 'application/json'
-        },
-        withCredentials: true
+        }
     };
     const creatingProject = projectId === null || typeof projectId === 'undefined';
     const queryParams = {};
@@ -34,12 +33,12 @@ export default function (projectId, vmState, params) {
     if (creatingProject) {
         Object.assign(opts, {
             method: 'post',
-            url: `${storage.projectUploadHost}/${qs}`
+            url: `${storage.projectUploadHost}${qs}`
         });
     } else {
         Object.assign(opts, {
             method: 'put',
-            url: `${storage.projectUploadHost}/${projectId}${qs}`
+            url: `${storage.projectUploadHost}${projectId}${qs}`
         });
     }
     return new Promise((resolve, reject) => {
@@ -54,7 +53,7 @@ export default function (projectId, vmState, params) {
             }
             body.id = projectId;
             if (creatingProject) {
-                body.id = body['content-name'];
+                body.id = body.return_data.project_id;
             }
             resolve(body);
         });
