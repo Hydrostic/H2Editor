@@ -29,6 +29,7 @@ import {
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
 import LocalizationHOC from '../lib/localization-hoc.jsx';
 import ProjectFetcherHOC from '../lib/project-fetcher-hoc.jsx';
+import UserReaderHoc from '../lib/user-reader-hoc.jsx';
 import ProjectSaverHOC from '../lib/project-saver-hoc.jsx';
 import QueryParserHOC from '../lib/query-parser-hoc.jsx';
 import storage from '../lib/storage';
@@ -204,6 +205,7 @@ const WrappedGui = compose(
     FontLoaderHOC,
     QueryParserHOC,
     ProjectFetcherHOC,
+    UserReaderHoc,
     ProjectSaverHOC,
     vmListenerHOC,
     vmManagerHOC,
