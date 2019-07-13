@@ -37,9 +37,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 'fetchProject'
             ]);
             this.state = {
-                projectTitle: '',
-                canRemix: false,
-                enableCommunity: false
+                projectTitle: ''
+                // canRemix: false,
+                // enableCommunity: false
             };
             storage.setProjectHost(props.projectHost);
             storage.setAssetHost(props.assetHost);
@@ -77,7 +77,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             if (projectId !== '' &&
                 projectId !== null &&
                 typeof projectId !== 'undefined' && projectId.toString() !== '0'){
-                return axios.get(`http://127.0.0.1:7001/v1/project/${parseInt(projectId, 10)}`)
+                return axios.get(`http://127.0.0.1:7001/v1/project/read/shared/${parseInt(projectId, 10)}`)
                     .then(response => {
                         if (response.data.message === 'Project Not Exists'){
                             throw new Error('Could not find project');
@@ -90,9 +90,8 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                                 .then(projectAsset => {
                                     if (projectAsset) {
                                         this.props.onFetchedProjectData(projectAsset.data, loadingState);
-                                        this.props.onUpdateProjectTitle(response.data.return_data.project_name);
+                                        this.props.onUpdateProjectTitle(null);
                                         // TODO: 结合用户来判断是否可以 remix，如果当前用户即为作品用户，则不可 remix，但未发布，则可 share
-                                        this.setState({canRemix: true, enableCommunity: true});
                                     } else {
                                         // Treat failure to load as an error
                                         // Throw to be caught by catch later on
@@ -148,9 +147,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             } = this.props;
             return (
                 <WrappedComponent
-                    canEditTitle
-                    canRemix={this.state.canRemix}
-                    enableCommunity={this.state.enableCommunity}
+                    // canEditTitle
+                    // canRemix={this.state.canRemix}
+                    // enableCommunity={this.state.enableCommunity}
                     fetchingProject={isFetchingWithIdProp}
                     {...componentProps}
                 />
@@ -178,7 +177,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         onUpdateProjectTitle: PropTypes.func
     };
     ProjectFetcherComponent.defaultProps = {
-        assetHost: 'https://assets.scratch.mit.edu',
+        assetHost: 'https://clipteam-assets.oss-cn-shanghai.aliyuncs.com',
         projectHost: 'https://clipteam-project.oss-cn-shanghai.aliyuncs.com'
     };
 

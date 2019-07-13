@@ -124,7 +124,8 @@ module.exports = [
                     test: /\.(svg|png|wav|gif|jpg)$/,
                     loader: 'file-loader',
                     options: {
-                        outputPath: 'static/assets/'
+                        outputPath: 'static/assets/',
+                        publicPath: 'http://localhost:2000/assets/'
                     }
                 }
             ])
@@ -211,7 +212,7 @@ module.exports = [
                         loader: 'file-loader',
                         options: {
                             outputPath: 'static/assets/',
-                            publicPath: `${STATIC_PATH}/assets/`
+                            publicPath: `http://localhost:2000/assets/`
                         }
                     }
                 ])

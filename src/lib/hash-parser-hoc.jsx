@@ -29,16 +29,17 @@ const HashParserHOC = function (WrappedComponent) {
             // if we are newly fetching a non-hash project...
             if (this.props.isFetchingWithoutId && !prevProps.isFetchingWithoutId) {
                 // ...clear the hash from the url
-                history.pushState('new-project', 'new-project',
-                    window.location.pathname + window.location.search);
+                // history.pushState('new-project', 'new-project',
+                //     window.location.pathname + window.location.search);
             }
         }
         componentWillUnmount () {
             window.removeEventListener('hashchange', this.handleHashChange);
         }
         handleHashChange () {
-            const hashMatch = window.location.hash.match(/#(\d+)/);
-            const hashProjectId = hashMatch === null ? defaultProjectId : hashMatch[1];
+            const hashMatch = window.location.href.match(/(?<=\/)(?![\w\W]*?\/)[\w\W]*/)[0];
+            const newHashMatch = hashMatch.match(/.*?(?=\?)/);
+            const hashProjectId = newHashMatch === null ? defaultProjectId : newHashMatch[0];
             this.props.setProjectId(hashProjectId.toString());
         }
         render () {
