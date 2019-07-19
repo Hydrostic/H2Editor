@@ -80,32 +80,36 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             if (projectId !== '' &&
                 projectId !== null &&
                 typeof projectId !== 'undefined' && projectId.toString() !== '0'){
-                return axios.get(`http://127.0.0.1:7001/v1/project/read/${parseInt(projectId, 10)}`)
+                return axios.get(`http://47.103.16.203:7001/v1/project/read/${parseInt(projectId, 10)}`)
                     .then(response => {
-                        if (response.data.message === 'Project Not Exists'){
+                        switch (response.data.message) {
+                        case 'Project Not Exists':
                             throw new Error('Could not find project');
-                        } else if (response.data.message === 'Permission Denied'){
+                        case 'Permission denied by project policy':
                             throw new Error('Permission denied by project policy');
-                        } else {
-                            const projectStorageName = response.data.return_data.project_storage_name || response.data.return_data.record_storage_name;
-                            storage
-                                .load(storage.AssetType.Project, projectStorageName, storage.DataFormat.JSON)
-                                .then(projectAsset => {
-                                    if (projectAsset) {
-                                        this.props.onFetchedProjectData(projectAsset.data, loadingState);
-                                        this.props.onUpdateProjectTitle(response.data.return_data.project_name);
-                                        // TODO: 结合用户来判断是否可以 remix，如果当前用户即为作品用户，则不可 remix，但未发布，则可 share
-                                        this.setState({canRemix: true, enableCommunity: true});
-                                    } else {
-                                        // Treat failure to load as an error
-                                        // Throw to be caught by catch later on
-                                        throw new Error('Could not find project');
-                                    }
-                                })
-                                .catch(err => {
-                                    this.props.onError(err);
-                                    log.error(err);
-                                });
+                        default:
+                            {
+                                const projectStorageName = response.data.return_data.project_storage_name || response.data.return_data.record_storage_name;
+                                storage
+                                    .load(storage.AssetType.Project, projectStorageName, storage.DataFormat.JSON)
+                                    .then(projectAsset => {
+                                        if (projectAsset) {
+                                            this.props.onFetchedProjectData(projectAsset.data, loadingState);
+                                            this.props.onUpdateProjectTitle(response.data.return_data.project_name);
+                                            // TODO: 结合用户来判断是否可以 remix，如果当前用户即为作品用户，则不可 remix，但未发布，则可 share
+                                            this.setState({canRemix: true, enableCommunity: true});
+                                        } else {
+                                            // Treat failure to load as an error
+                                            // Throw to be caught by catch later on
+                                            throw new Error('Could not find project');
+                                        }
+                                    })
+                                    .catch(err => {
+                                        this.props.onError(err);
+                                        log.error(err);
+                                    });
+                            }
+                            break;
                         }
                     })
                     .catch(err => {
