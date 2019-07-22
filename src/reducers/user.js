@@ -13,19 +13,22 @@ const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
     switch (action.type) {
     case SAVE_USER_INFO:{
-        state.info = action.info;
-        return state;
+        return Object.assign({}, state, {
+            userInfo: action.info
+        });
     }
     case SET_USER_LOGIN_STATE:{
-        state.isLogin = true;
-        return;
+        return Object.assign({}, state, {
+            isLogin: true
+        });
     }
     case SET_USER_AUTHOR:{
-        state.isAuthor = true;
-        return;
+        return Object.assign({}, state, {
+            isAuthor: action.info
+        });
     }
     default:{
-        break;
+        return state;
     }
     }
 };

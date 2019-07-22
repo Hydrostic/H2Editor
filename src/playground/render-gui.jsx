@@ -79,7 +79,6 @@ export default appTarget => {
                 showComingSoon
                 backpackHost={backpackHost}
                 canSave={false}
-                projectId={'112'}
                 onClickLogo={onClickLogo}
             />,
         appTarget);
