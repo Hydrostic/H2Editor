@@ -557,79 +557,77 @@ class MenuBar extends React.Component {
                         )}
                     </div>
                     {this.props.sessionExists ? (
-                        this.props.username ? (
-                            // ************ user is logged in ************
-                            <React.Fragment>
-                                <a href="/mystuff/">
-                                    <div
-                                        className={classNames(
-                                            styles.menuBarItem,
-                                            styles.hoverable,
-                                            styles.mystuffButton
-                                        )}
-                                    >
-                                        <img
-                                            className={styles.mystuffIcon}
-                                            src={mystuffIcon}
-                                        />
-                                    </div>
-                                </a>
-                                <AccountNav
+                    // ************ user is logged in ************
+                        <React.Fragment>
+                            <a href="/mystuff/">
+                                <div
                                     className={classNames(
                                         styles.menuBarItem,
                                         styles.hoverable,
-                                        {[styles.active]: this.props.accountMenuOpen}
+                                        styles.mystuffButton
                                     )}
-                                    isOpen={this.props.accountMenuOpen}
-                                    isRtl={this.props.isRtl}
-                                    menuBarMenuClassName={classNames(styles.menuBarMenu)}
-                                    onClick={this.props.onClickAccount}
-                                    onClose={this.props.onRequestCloseAccount}
-                                    onLogOut={this.props.onLogOut}
+                                >
+                                    <img
+                                        className={styles.mystuffIcon}
+                                        src={mystuffIcon}
+                                    />
+                                </div>
+                            </a>
+                            <AccountNav
+                                className={classNames(
+                                    styles.menuBarItem,
+                                    styles.hoverable,
+                                    {[styles.active]: this.props.accountMenuOpen}
+                                )}
+                                isOpen={this.props.accountMenuOpen}
+                                isRtl={this.props.isRtl}
+                                menuBarMenuClassName={classNames(styles.menuBarMenu)}
+                                onClick={this.props.onClickAccount}
+                                onClose={this.props.onRequestCloseAccount}
+                                onLogOut={this.props.onLogOut}
+                            />
+                        </React.Fragment>
+                    ) : (
+                    // ********* user not logged in ************
+                        <React.Fragment>
+                            <div
+                                className={classNames(
+                                    styles.menuBarItem,
+                                    styles.hoverable
+                                )}
+                                key="join"
+                                onMouseUp={this.props.onOpenRegistration}
+                            >
+                                {/* <FormattedMessage
+                                    defaultMessage="Join Scratch"
+                                    description="Link for creating a Scratch account"
+                                    id="gui.menuBar.joinScratch"
+                                /> */}
+                                Join Clip Community
+                            </div>
+                            <div
+                                className={classNames(
+                                    styles.menuBarItem,
+                                    styles.hoverable
+                                )}
+                                key="login"
+                                onMouseUp={this.props.onClickLogin}
+                            >
+                                <FormattedMessage
+                                    defaultMessage="Sign in"
+                                    description="Link for signing in to your Scratch account"
+                                    id="gui.menuBar.signIn"
                                 />
-                            </React.Fragment>
-                        ) : (
-                            // ********* user not logged in, but a session exists
-                            // ********* so they can choose to log in
-                            <React.Fragment>
-                                <div
-                                    className={classNames(
-                                        styles.menuBarItem,
-                                        styles.hoverable
-                                    )}
-                                    key="join"
-                                    onMouseUp={this.props.onOpenRegistration}
-                                >
-                                    <FormattedMessage
-                                        defaultMessage="Join Scratch"
-                                        description="Link for creating a Scratch account"
-                                        id="gui.menuBar.joinScratch"
-                                    />
-                                </div>
-                                <div
-                                    className={classNames(
-                                        styles.menuBarItem,
-                                        styles.hoverable
-                                    )}
-                                    key="login"
-                                    onMouseUp={this.props.onClickLogin}
-                                >
-                                    <FormattedMessage
-                                        defaultMessage="Sign in"
-                                        description="Link for signing in to your Scratch account"
-                                        id="gui.menuBar.signIn"
-                                    />
-                                    <LoginDropdown
-                                        className={classNames(styles.menuBarMenu)}
-                                        isOpen={this.props.loginMenuOpen}
-                                        isRtl={this.props.isRtl}
-                                        renderLogin={this.props.renderLogin}
-                                        onClose={this.props.onRequestCloseLogin}
-                                    />
-                                </div>
-                            </React.Fragment>
-                        )
-                    ) : ([])}
+                                <LoginDropdown
+                                    className={classNames(styles.menuBarMenu)}
+                                    isOpen={this.props.loginMenuOpen}
+                                    isRtl={this.props.isRtl}
+                                    // renderLogin={this.props.renderLogin}
+                                    onClose={this.props.onRequestCloseLogin}
+                                />
+                            </div>
+                        </React.Fragment>
+                    )}
                 </div>
             </Box>
         );
@@ -712,7 +710,7 @@ const mapStateToProps = (state, ownProps) => {
         locale: state.locales.locale,
         loginMenuOpen: loginMenuOpen(state),
         projectTitle: state.scratchGui.projectTitle,
-        sessionExists: state.session && typeof state.session.session !== 'undefined',
+        sessionExists: state.session.isLogin,
         username: user ? user.username : null,
         userOwnsProject: ownProps.authorUsername && user &&
             (ownProps.authorUsername === user.username),

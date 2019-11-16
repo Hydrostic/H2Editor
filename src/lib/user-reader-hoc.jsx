@@ -34,8 +34,8 @@ const UserReaderHoc = function (WrappedComponent) {
             if (Cookies.get('clipauth_rts')) {
                 if (Cookies.get('clipauth_ats') && Cookies.get('clipuservice_info')){
                 // The user has logined
-                    this.props.onSetUserLoginState();
-                    this.props.onSaveUserInfo(JSON.parse(Cookies.get('clipuservice_info')));
+                    this.props.setUserLoginState();
+                    this.props.saveUserInfo(JSON.parse(Cookies.get('clipuservice_info')));
                 } else {
                     if (!Cookies.get('clipauth_ats')){
                         axios
@@ -58,8 +58,8 @@ const UserReaderHoc = function (WrappedComponent) {
                                 maxAge: 60 * 60 * 4
                             });
                         });
-                    this.props.onSetUserLoginState();
-                    this.props.onSaveUserInfo(JSON.parse(Cookies.get('clipuservice_info')));
+                    this.props.setUserLoginState();
+                    this.props.saveUserInfo(JSON.parse(Cookies.get('clipuservice_info')));
                 }
             }
         }
@@ -73,16 +73,16 @@ const UserReaderHoc = function (WrappedComponent) {
     }
     UserReaderComponent.propTypes = {
         isFetchingWithId: PropTypes.bool,
-        onSaveUserInfo: PropTypes.func,
-        onSetUserLoginState: PropTypes.func
+        saveUserInfo: PropTypes.func,
+        setUserLoginState: PropTypes.func
     };
     const mapStateToProps = state => ({
         userInfo: state.scratchGui.user.userInfo,
         isFetchingWithId: getIsFetchingWithId(state.scratchGui.projectState.loadingState)
     });
     const mapDispatchToProps = dispatch => ({
-        onSetUserLoginState: () => dispatch(setUserLoginState()),
-        onSaveUserInfo: userData => dispatch(saveUserInfo(userData))
+        setUserLoginState: () => dispatch(setUserLoginState()),
+        saveUserInfo: userData => dispatch(saveUserInfo(userData))
     });
     const mergeProps = (stateProps, dispatchProps, ownProps) => Object.assign(
         {}, stateProps, dispatchProps, ownProps

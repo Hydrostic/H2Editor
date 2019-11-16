@@ -218,8 +218,8 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         isShowingProject: getIsShowingProject(state.scratchGui.projectState.loadingState),
         loadingState: state.scratchGui.projectState.loadingState,
         reduxProjectId: state.scratchGui.projectState.projectId,
-        userInfo: state.scratchGui.user.userInfo,
-        isLogin: state.scratchGui.user.isLogin
+        userInfo: state.session.userInfo,
+        isLogin: state.session.isLogin
     });
     const mapDispatchToProps = dispatch => ({
         onActivateTab: tab => dispatch(activateTab(tab)),

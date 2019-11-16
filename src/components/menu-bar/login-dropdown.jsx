@@ -48,8 +48,8 @@ const LoginDropdown = ({
     className,
     isOpen,
     isRtl,
-    onClose,
-    renderLogin
+    onClose
+    // renderLogin
 }) => (
     <MenuBarMenu
         className={className}
@@ -64,9 +64,9 @@ const LoginDropdown = ({
                 styles.login
             )}
         >
-            {renderLogin({
+            {/* {renderLogin({
                 onClose: onClose
-            })}
+            })} */}
         </div>
     </MenuBarMenu>
 );
